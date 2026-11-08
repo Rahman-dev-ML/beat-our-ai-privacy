@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Beat Our AI",
+    "slug": "beat-our-ai",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "beatoireai",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B1C24"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.beatoireai.tictactoe"
+    },
+    "android": {
+      "package": "com.beatoireai.tictactoe",
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1C24",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "60107975-2fda-4372-b0fa-b85aca8752a0"
+      }
+    },
+    "owner": "hsd007"
+  }
+}

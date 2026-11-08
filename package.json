@@ -1,0 +1,36 @@
+{
+  "name": "beat-our-ai",
+  "version": "1.1.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "test": "node scripts/verify-ai.mjs && node --test tests/release.test.cjs",
+    "typecheck": "tsc --noEmit",
+    "release:check": "node scripts/release-check.mjs",
+    "android:apk": "npx eas-cli build -p android --profile preview",
+    "android:aab": "npx eas-cli build -p android --profile production",
+    "android:prebuild": "npx expo prebuild --platform android --clean"
+  },
+  "dependencies": {
+    "@expo-google-fonts/bungee": "^0.4.1",
+    "@expo-google-fonts/dm-sans": "^0.4.2",
+    "expo": "~57.0.26",
+    "expo-font": "~57.0.4",
+    "expo-haptics": "~57.0.3",
+    "expo-linear-gradient": "~57.0.2",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  }
+}
