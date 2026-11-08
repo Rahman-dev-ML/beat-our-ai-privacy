@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "beat-our-ai",
   "version": "1.1.0",
   "private": true,
@@ -13,7 +13,9 @@
     "release:check": "node scripts/release-check.mjs",
     "android:apk": "npx eas-cli build -p android --profile preview",
     "android:aab": "npx eas-cli build -p android --profile production",
-    "android:prebuild": "npx expo prebuild --platform android --clean"
+    "android:prebuild": "npx expo prebuild --platform android --clean",
+    "ios:build": "npx eas-cli build -p ios --profile production",
+    "ios:submit": "npx eas-cli submit -p ios --profile production"
   },
   "dependencies": {
     "@expo-google-fonts/bungee": "^0.4.1",
