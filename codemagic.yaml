@@ -15,7 +15,7 @@ workflows:
       vars:
         BUNDLE_ID: "com.beatoireai.tictactoe"
         # App Store Connect → App Information → Apple ID (numeric). Update if wrong.
-        APP_STORE_APPLE_ID: 0000000000
+        APP_STORE_APPLE_ID: 6832355509
       node: 22
       xcode: latest
       cocoapods: default
