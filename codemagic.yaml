@@ -92,8 +92,16 @@ workflows:
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/ios/$WORKSPACE" \
             --scheme "$SCHEME"
+          # Codemagic publishing only uploads IPAs collected as artifacts.
+          # Expo/prebuild can leave the IPA under ios/build/... — copy to the standard path.
+          mkdir -p "$CM_BUILD_DIR/build/ios/ipa"
+          find "$CM_BUILD_DIR" -type f -name "*.ipa" -print
+          find "$CM_BUILD_DIR" -type f -name "*.ipa" -exec cp -f {} "$CM_BUILD_DIR/build/ios/ipa/" \;
+          ls -la "$CM_BUILD_DIR/build/ios/ipa"
     artifacts:
       - build/ios/ipa/*.ipa
+      - ios/build/ios/ipa/*.ipa
+      - "**/*.ipa"
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
