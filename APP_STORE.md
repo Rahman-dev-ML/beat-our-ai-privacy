@@ -1,19 +1,15 @@
-﻿# App Store (iOS)
+﻿# App Store (iOS) — Codemagic (same as PrepTra / Chroma)
 
-## Privacy Policy URL (paste into App Store Connect)
+## Privacy Policy URL
 https://cdn.jsdelivr.net/gh/Rahman-dev-ML/beat-our-ai-privacy@main/privacy.html
 
 ## Bundle ID
-com.beatoireai.tictactoe
+`com.beatoireai.tictactoe`
 
 ## Build
-```bash
-npm ci
-npx eas-cli login
-npx eas-cli build -p ios --profile production
-```
+1. Codemagic → add GitHub repo `Rahman-dev-ML/beat-our-ai-privacy` (if not already)
+2. Ensure App Store Connect integration + signing for `com.beatoireai.tictactoe`
+3. Set `APP_STORE_APPLE_ID` in `codemagic.yaml` (App Information → Apple ID)
+4. Start workflow **Beat Our AI iOS (App Store)**
 
-After App Store Connect shows the build, set `ascAppId` in `eas.json` then:
-```bash
-npx eas-cli submit -p ios --profile production
-```
+No Expo login required.

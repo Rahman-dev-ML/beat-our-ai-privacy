@@ -1,0 +1,60 @@
+# Beat Our AI — Expo → native iOS via Codemagic (same path as PrepTra / Chroma)
+# Bundle ID: com.beatoireai.tictactoe
+
+workflows:
+  beat-our-ai-ios:
+    name: Beat Our AI iOS (App Store)
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.beatoireai.tictactoe
+      vars:
+        BUNDLE_ID: "com.beatoireai.tictactoe"
+        # App Store Connect → App Information → Apple ID (numeric). Update if wrong.
+        APP_STORE_APPLE_ID: 0000000000
+      node: 22
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install npm dependencies
+        script: |
+          npm ci || npm install
+      - name: Expo prebuild iOS
+        script: |
+          npx expo prebuild --platform ios --non-interactive --clean
+      - name: Install CocoaPods
+        script: |
+          cd ios && pod install
+      - name: Set up code signing profiles
+        script: xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd $CM_BUILD_DIR/ios
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" || true)
+          if [ -z "$LATEST_BUILD_NUMBER" ] || [ "$LATEST_BUILD_NUMBER" = "null" ]; then
+            UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+          else
+            UPDATED_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
+          fi
+          agvtool new-version -all "$UPDATED_BUILD_NUMBER"
+      - name: Build IPA
+        script: |
+          cd $CM_BUILD_DIR/ios
+          WORKSPACE=$(ls -d *.xcworkspace | head -1)
+          SCHEME=$(xcodebuild -list -workspace "$WORKSPACE" 2>/dev/null | awk '/Schemes:/{f=1;next} f&&NF{print; exit}' | xargs)
+          echo "Workspace=$WORKSPACE Scheme=$SCHEME"
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/$WORKSPACE" \
+            --scheme "$SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
