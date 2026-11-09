@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.beatoireai.tictactoe"
+      "bundleIdentifier": "com.beatoireai.tictactoe",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.beatoireai.tictactoe",

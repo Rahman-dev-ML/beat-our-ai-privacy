@@ -26,6 +26,48 @@ workflows:
       - name: Expo prebuild iOS
         script: |
           npx expo prebuild --platform ios --non-interactive --clean
+      - name: Force brand AppIcon from assets/icon.png
+        script: |
+          set -e
+          ICON_SRC="$CM_BUILD_DIR/assets/icon.png"
+          # Expo puts AppIcon under ios/<AppName>/Images.xcassets or Assets.xcassets
+          DEST=$(find "$CM_BUILD_DIR/ios" -type d -name "AppIcon.appiconset" | head -1)
+          echo "AppIcon set: $DEST"
+          test -f "$ICON_SRC"
+          test -d "$DEST"
+          # Write 1024 App Store icon (required) + Contents.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          try:
+              from PIL import Image
+          except ImportError:
+              import subprocess, sys
+              subprocess.check_call([sys.executable, "-m", "pip", "install", "pillow", "-q"])
+              from PIL import Image
+          src = Path(os.environ["CM_BUILD_DIR"]) / "assets" / "icon.png"
+          dest = None
+          for p in Path(os.environ["CM_BUILD_DIR"], "ios").rglob("AppIcon.appiconset"):
+              dest = p
+              break
+          assert dest, "AppIcon.appiconset not found"
+          im = Image.open(src).convert("RGB").resize((1024, 1024), Image.Resampling.LANCZOS)
+          out = dest / "AppIcon-1024.png"
+          im.save(out, "PNG")
+          contents = {
+            "images": [
+              {
+                "filename": "AppIcon-1024.png",
+                "idiom": "universal",
+                "platform": "ios",
+                "size": "1024x1024"
+              }
+            ],
+            "info": {"author": "xcode", "version": 1}
+          }
+          (dest / "Contents.json").write_text(json.dumps(contents, indent=2), encoding="utf-8")
+          print("Wrote", out, out.stat().st_size)
+          PY
       - name: Install CocoaPods
         script: |
           cd ios && pod install
